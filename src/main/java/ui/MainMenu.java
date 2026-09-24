@@ -1,6 +1,7 @@
 package ui;
 
 import myLib.UserMethods;
+import services.FileServices;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -32,22 +33,15 @@ public class MainMenu {
             case "0" -> exitMenu = true;
             case "1" -> {
                 UserMethods userMethods1 = new UserMethods();
-                String pathString = "src/main/resources/test2.txt";
-                Path p = Path.of(pathString);
-                if (Files.exists(p)){
-                    ArrayList<String> pTextContent = null;
-                    try {
-                        pTextContent = new ArrayList<>(Files.readAllLines(p));
-                    } catch (IOException e) {
-                        throw new RuntimeException(e);
-                    }
-                    for (String line : pTextContent){
+                Path p = userMethods1.fileToRead("Introduce the path to the file to read: ");
+                FileServices fileServices =  new FileServices();
+                try {
+                    for (String line : fileServices.readTextFile(p)) {
                         userMethods1.myPrinter(line);
                     }
-                }else{
-                    userMethods1.myPrinter("The file does not exist.");
+                } catch (IOException e) {
+                    userMethods1.myPrinter("Something went wrong.");
                 }
-
             }
             case "2" -> {
                 userMethods.myPrinter("option2");
