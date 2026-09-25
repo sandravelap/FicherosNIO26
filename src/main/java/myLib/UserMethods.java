@@ -6,6 +6,7 @@ import java.nio.file.InvalidPathException;
 import java.nio.file.Path;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.regex.PatternSyntaxException;
 
 import static java.lang.IO.println;
 
@@ -84,7 +85,7 @@ public class UserMethods {
             myPrinter(message);
             userPath = sc.nextLine();
             if (!checkPath(userPath)) {
-                myPrinter("The path is incorrect.");
+                myPrinter("Illegal characters.");
             }else if(!Files.exists(Path.of(userPath))) {
                 myPrinter("The path does not exist.");
             }else if(Files.isDirectory(Path.of(userPath))){
@@ -99,5 +100,57 @@ public class UserMethods {
         return p;
     }
 
+    public Path fileToWrite(String message){
+        Path p;
+        boolean pOK = false;
+        Scanner sc = new Scanner(System.in);
+        String userPath="";
+        while(!pOK){
+            myPrinter(message);
+            userPath = sc.nextLine();
+            if (!checkPath(userPath)) {
+                myPrinter("Illegal characters.");
+            }else if(!Files.exists(Path.of(userPath))) {
+                myPrinter("The path does not exist.");
+            }else if(Files.isDirectory(Path.of(userPath))){
+                myPrinter("This is a directory, not a file.");
+            }else if(Files.isWritable(Path.of(userPath))){
+                pOK= true;
+            }else{
+                myPrinter("Unable to read the file.");
+            }
+        }
+        p = Path.of(userPath);
+        return p;
+    }
 
+    public String requestStringRegex(final String message, String regex) {
+        Scanner sc = new Scanner(System.in);
+        String dato = "";
+        boolean error = true;
+        while (error) {
+            try {
+                dato = "";
+                myPrinter(message);
+                dato = sc.nextLine();
+                if (regex == null) {
+                    error = false;
+                } else {
+                    error = !dato.matches(regex);
+                    if (error) {
+                        myPrinter("The String does not match the regex. ");
+                    }
+                }
+            } catch (PatternSyntaxException e) {
+                myPrinter("Wrong regex.");
+            }
+        }
+        return dato;
+    }
+
+    public String requestString(String message) {
+        myPrinter(message);
+        Scanner sc = new Scanner(System.in);
+        return sc.nextLine();
+    }
 }
